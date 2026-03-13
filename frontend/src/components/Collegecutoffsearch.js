@@ -44,7 +44,7 @@ const handleLogout = () => {
 };
 
  useEffect(() => {
-  fetch("https://seat-allotment.onrender.com/api/cutoff/display")
+  fetch("https://seat-allotment-production.up.railway.app/api/cutoff/display")
     .then(res => res.json())
     .then(response => {
       console.log("API DATA:", response);
@@ -83,7 +83,7 @@ const handleLogout = () => {
 
   try {
     const response = await axios.post(
-      "https://seat-allotment.onrender.com/api/searchcutoff/search",
+      "https://seat-allotment-production.up.railway.app/api/searchcutoff/search",
       {
         physics,
         chemistry,
@@ -362,4 +362,5 @@ const handleLogout = () => {
       </div>
     </>
   );
+
 }
