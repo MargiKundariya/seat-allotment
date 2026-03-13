@@ -39,7 +39,7 @@ export default function LoginPage() {
   try {
     setLoading(true);
 
-    const res = await axios.post("https://seat-allotment.onrender.com/api/auth/login", {
+    const res = await axios.post("https://seat-allotment-production.up.railway.app/api/auth/login", {
       email,
       password,
       role
@@ -166,4 +166,5 @@ export default function LoginPage() {
       </div>
     </>
   );
+
 }
