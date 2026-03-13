@@ -31,7 +31,7 @@ const COURSES = [
 
 
 
-const cutoffLabels = { low: "Low Demand", mid: "Moderate", high: "High Demand" };
+
 
 export default function AddCollegeCutoff() {
   const [collegeName, setCollegeName] = useState("");
@@ -336,3 +336,4 @@ const handleSubmit = async (e) => {
   );
 
 }
+
