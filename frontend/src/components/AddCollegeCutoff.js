@@ -45,6 +45,7 @@ export default function AddCollegeCutoff() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const fileRef = useRef();
+ 
  const navigate = useNavigate();
 
 const handleLogout = () => {
@@ -336,4 +337,5 @@ const handleSubmit = async (e) => {
   );
 
 }
+
 
