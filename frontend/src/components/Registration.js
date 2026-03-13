@@ -30,7 +30,7 @@ export default function Registration() {
   try {
     setSending(true);
 
-    await axios.post("https://seat-allotment.onrender.com/api/auth/send-otp", {
+    await axios.post("https://seat-allotment-production.up.railway.app/api/auth/send-otp", {
       email: form.email
     });
 
@@ -51,7 +51,7 @@ export default function Registration() {
   }
 
   try {
-    await axios.post("https://seat-allotment.onrender.com/api/auth/verify-otp", {
+    await axios.post("https://seat-allotment-production.up.railway.app/api/auth/verify-otp", {
       email: form.email,
       otp: form.otp
     });
@@ -73,7 +73,7 @@ export default function Registration() {
   }
 
   try {
-    await axios.post("https://seat-allotment.onrender.com/api/auth/register", {
+    await axios.post("https://seat-allotment-production.up.railway.app/api/auth/register", {
       firstName: form.firstName,
       lastName: form.lastName,
       email: form.email,
@@ -229,4 +229,5 @@ export default function Registration() {
       </div>
     </div>
   );
+
 }
