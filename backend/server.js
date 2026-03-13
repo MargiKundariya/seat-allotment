@@ -15,7 +15,11 @@ app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/cutoff", require("./routes/cutoffRoutes"));
 app.use("/api/searchcutoff", require("./routes/searchRoutes"));
 
+app.get("/", (req, res) => {  
+  res.send("Seat Allotment API is running");  
+});
 
 app.listen(PORT, () => {
   console.log("Server running");
+
 });
