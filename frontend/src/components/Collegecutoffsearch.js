@@ -50,7 +50,7 @@ const handleLogout = () => {
 
       const apiData = response.data;   // 👈 FIX HERE
 
-      setCutoffData(apiData);
+      
 
       const uniqueInstitutes = [
         ...new Set(apiData.map(item => item.collegeName))
@@ -363,4 +363,5 @@ const handleLogout = () => {
   );
 
 }
+
 
