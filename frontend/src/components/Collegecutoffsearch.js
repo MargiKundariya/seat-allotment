@@ -30,7 +30,6 @@ export default function CollegeCutoffSearch() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
   const [searched, setSearched] = useState(false);
-  const [cutoffData, setCutoffData] = useState([]);
   const [institutes, setInstitutes] = useState([]);
   const [courses, setCourses] = useState([]);
   const hasAnyInput = physics || chemistry || maths || total || institute || course || category;
@@ -364,3 +363,4 @@ const handleLogout = () => {
   );
 
 }
+
