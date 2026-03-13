@@ -77,9 +77,9 @@ const handleSubmit = async (e) => {
   const formData = new FormData();
   formData.append("file", uploadedFile);
 
-  await axios.post("https://seat-allotment.onrender.com/api/cutoff/add-cutoff-file", formData);
+  await axios.post("https://seat-allotment-production.up.railway.app/api/cutoff/add-cutoff-file", formData);
 } else {
-  await axios.post("https://seat-allotment.onrender.com/api/cutoff/add-cutoff-manual", {
+  await axios.post("https://seat-allotment-production.up.railway.app/api/cutoff/add-cutoff-manual", {
     collegeName,
     course,
     category,
@@ -334,4 +334,5 @@ const handleSubmit = async (e) => {
       </div>
     </>
   );
+
 }
