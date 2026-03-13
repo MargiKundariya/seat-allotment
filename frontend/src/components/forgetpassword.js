@@ -22,7 +22,7 @@ export default function ForgotPassword() {
   const sendOtp = async () => {
     try {
       setLoading(true);
-      await axios.post("https://seat-allotment.onrender.com/api/auth/send-otp", { email });
+      await axios.post("https://seat-allotment-production.up.railway.app/api/auth/send-otp", { email });
       alert("OTP sent to your email");
       setStep(2);
     } catch (err) {
@@ -36,7 +36,7 @@ export default function ForgotPassword() {
   const verifyOtp = async () => {
     try {
       setLoading(true);
-      await axios.post("https://seat-allotment.onrender.com/api/auth/verify-otp", {
+      await axios.post("https://seat-allotment-production.up.railway.app/api/auth/verify-otp", {
         email,
         otp,
       });
@@ -53,7 +53,7 @@ export default function ForgotPassword() {
   const resetPassword = async () => {
     try {
       setLoading(true);
-      await axios.post("https://seat-allotment.onrender.com/api/auth/resetPassword", {
+      await axios.post("https://seat-allotment-production.up.railway.app/api/auth/resetPassword", {
         email,
         newPassword: password,
       });
@@ -153,4 +153,5 @@ export default function ForgotPassword() {
       </div>
     </div>
   );
+
 }
