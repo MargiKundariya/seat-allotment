@@ -30,9 +30,6 @@ const COURSES = [
 ];
 
 
-
-
-
 export default function AddCollegeCutoff() {
   const [collegeName, setCollegeName] = useState("");
   const [course, setCourse] = useState("");
@@ -44,8 +41,13 @@ export default function AddCollegeCutoff() {
   const [dragging, setDragging] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [pcmFile, setPcmFile] = useState(null);
+  const [gujcetFile, setGujcetFile] = useState(null);
+  const [pcmDragging, setPcmDragging] = useState(false);
+  const [gujcetDragging, setGujcetDragging] = useState(false);
   const fileRef = useRef();
- 
+  const pcmRef = useRef();
+  const gujcetRef = useRef();
  const navigate = useNavigate();
 
 const handleLogout = () => {
@@ -54,6 +56,19 @@ const handleLogout = () => {
 };
   const hasName = collegeName.trim().length > 0;
 
+    const handlePcmFile = (file) => {
+    if (!file) return;
+    const ext = file.name.split(".").pop().toLowerCase();
+    if (!["pdf", "xlsx", "xls"].includes(ext)) return alert("Only PDF or Excel allowed");
+    setPcmFile(file);
+  };
+
+  const handleGujcetFile = (file) => {
+    if (!file) return;
+    const ext = file.name.split(".").pop().toLowerCase();
+    if (!["pdf", "xlsx", "xls"].includes(ext)) return alert("Only PDF or Excel allowed");
+    setGujcetFile(file);
+  };
   const handleFile = (file) => {
     if (!file) return;
     const ext = file.name.split(".").pop().toLowerCase();
@@ -78,9 +93,9 @@ const handleSubmit = async (e) => {
   const formData = new FormData();
   formData.append("file", uploadedFile);
 
-  await axios.post("https://seat-allotment-production.up.railway.app/api/cutoff/add-cutoff-file", formData);
+  await axios.post("https://localhost:5000/api/cutoff/add-cutoff-file", formData);
 } else {
-  await axios.post("https://seat-allotment-production.up.railway.app/api/cutoff/add-cutoff-manual", {
+  await axios.post("https://localhost:5000/api/cutoff/add-cutoff-manual", {
     collegeName,
     course,
     category,
@@ -108,6 +123,38 @@ const handleSubmit = async (e) => {
   }
 
   setLoading(false);
+};
+
+const handlePcmUpload = async () => {
+  if (!pcmFile) return alert("Please select PCM file");
+
+  const formData = new FormData();
+  formData.append("file", pcmFile);
+
+  try {
+    await axios.post("https://seat-allotment-production.up.railway.app/api/percentile/upload-pcm", formData);
+    alert("PCM uploaded successfully ✅");
+    setPcmFile(null);
+  } catch (error) {
+    console.log(error);
+    alert("PCM upload failed ❌");
+  }
+};
+
+const handleGujcetUpload = async () => {
+  if (!gujcetFile) return alert("Please select GUJCET file");
+
+  const formData = new FormData();
+  formData.append("file", gujcetFile);
+
+  try {
+    await axios.post("https://seat-allotment-production.up.railway.app/api/percentile/upload-gujcet", formData);
+    alert("GUJCET uploaded successfully ✅");
+    setGujcetFile(null);
+  } catch (error) {
+    console.log(error);
+    alert("GUJCET upload failed ❌");
+  }
 };
   return (
     <>
@@ -193,6 +240,9 @@ const handleSubmit = async (e) => {
                 <span className="cc-divider-text">or enter manually</span>
                 <div className="cc-divider-line" />
               </div>
+
+              
+
 
               {/* College Name */}
               <div className="cc-field-group">
@@ -330,12 +380,133 @@ const handleSubmit = async (e) => {
               </button>
 
             </form>
-          </div>
+      {/* 🔥 Percentile Upload Section */}
+      <div className="cc-divider">
+        <div className="cc-divider-line" />
+        <span className="cc-divider-text">Upload Percentile Data</span>
+        <div className="cc-divider-line" />
+      </div>
+
+      {/* PCM Upload */}
+      <div
+        className={`cc-upload-zone${pcmDragging ? " cc-upload-zone--drag" : ""}${pcmFile ? " cc-upload-zone--uploaded" : ""}`}
+        onClick={() => !pcmFile && pcmRef.current.click()}
+        onDragOver={(e) => { e.preventDefault(); setPcmDragging(true); }}
+        onDragLeave={() => setPcmDragging(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setPcmDragging(false);
+          handlePcmFile(e.dataTransfer.files[0]);
+        }}
+      >
+        <input
+          ref={pcmRef}
+          type="file"
+          className="cc-upload-input"
+          accept=".pdf,.xlsx,.xls"
+          onChange={(e) => handlePcmFile(e.target.files[0])}
+        />
+
+        {pcmFile ? (
+          <>
+            <span className="cc-upload-icon">✅</span>
+            <div className="cc-upload-title">PCM File Ready</div>
+            <div className="cc-uploaded-file">
+              <span className="cc-uploaded-file-icon">📄</span>
+              <span className="cc-uploaded-file-name">{pcmFile.name}</span>
+              <button
+                type="button"
+                className="cc-uploaded-remove"
+                onClick={(e) => { e.stopPropagation(); setPcmFile(null); }}
+              >✕</button>
+            </div>
+          </>
+        ) : (
+          <>
+            <span className="cc-upload-icon">☁️</span>
+            <div className="cc-upload-title">Upload PCM Percentile File</div>
+            <div className="cc-upload-sub">Drop or click to upload</div>
+          </>
+        )}
+      </div>
+
+       <button
+                className="cc-submit-btn"
+                type="button"
+                onClick={handlePcmUpload}
+              >
+                {loading ? (
+                  <span className="cc-spinner" />
+                ) : (
+                  <>
+                    <span className="cc-submit-btn__text">PCM Percentile</span>
+                    <span className="cc-submit-btn__icon">→</span>
+                  </>
+                )}
+              </button>
+<br/>
+      {/* GUJCET Upload */}
+      <div
+        className={`cc-upload-zone${gujcetDragging ? " cc-upload-zone--drag" : ""}${gujcetFile ? " cc-upload-zone--uploaded" : ""}`}
+        onClick={() => !gujcetFile && gujcetRef.current.click()}
+        onDragOver={(e) => { e.preventDefault(); setGujcetDragging(true); }}
+        onDragLeave={() => setGujcetDragging(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setGujcetDragging(false);
+          handleGujcetFile(e.dataTransfer.files[0]);
+        }}
+      >
+        <input
+          ref={gujcetRef}
+          type="file"
+          className="cc-upload-input"
+          accept=".pdf,.xlsx,.xls"
+          onChange={(e) => handleGujcetFile(e.target.files[0])}
+        />
+
+        {gujcetFile ? (
+          <>
+            <span className="cc-upload-icon">✅</span>
+            <div className="cc-upload-title">GUJCET File Ready</div>
+            <div className="cc-uploaded-file">
+              <span className="cc-uploaded-file-icon">📄</span>
+              <span className="cc-uploaded-file-name">{gujcetFile.name}</span>
+              <button
+                type="button"
+                className="cc-uploaded-remove"
+                onClick={(e) => { e.stopPropagation(); setGujcetFile(null); }}
+              >✕</button>
+            </div>
+          </>
+        ) : (
+          <>
+            <span className="cc-upload-icon">☁️</span>
+            <div className="cc-upload-title">Upload GUJCET Percentile File</div>
+            <div className="cc-upload-sub">Drop or click to upload</div>
+          </>
+        )}
+      </div>
+
+       <button
+                className="cc-submit-btn"
+                type="button"
+              onClick={handleGujcetUpload}
+              >
+                {loading ? (
+                  <span className="cc-spinner" />
+                ) : (
+                  <>
+                    <span className="cc-submit-btn__text">gujcet Percentile</span>
+                    <span className="cc-submit-btn__icon">→</span>
+                  </>
+                )}
+              </button>
+
+
+                </div>
         </main>
       </div>
     </>
   );
-
 }
-
-
