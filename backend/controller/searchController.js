@@ -18,8 +18,12 @@ exports.searchByRank = async (req, res) => {
     let finalMerit = null;
 
     // ✅ If marks are provided → calculate rank
-    if (physics && chemistry && maths && gujcetMarks) {
-
+    if (
+  physics !== "" &&
+  chemistry !== "" &&
+  maths !== "" &&
+  gujcetMarks !== ""
+){
       const phy = Number(physics);
       const chem = Number(chemistry);
       const math = Number(maths);
