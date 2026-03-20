@@ -2,15 +2,16 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../assets/login.css";
-import seatLogo from  "../assets/logo.png";
+import seatLogo from "../assets/logo.png";
 
 const SeatLogo = () => (
- <img 
+  <img 
     src={seatLogo} 
     alt="Seat Allocate Logo" 
     className="reg-logo-img"
   />
 );
+
 const roles = [
   { value: "", label: "Select your role" },
   { value: "admin", label: "Administrator" },
@@ -25,146 +26,157 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const navigate = useNavigate();
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
-  setSuccess("");
 
-  if (!email || !role || !password) {
-    setError("Please fill in all fields.");
-    return;
-  }
+  const navigate = useNavigate(); // ✅ already correct
 
-  try {
-    setLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
 
-    const res = await axios.post("https://seat-allotment-production.up.railway.app/api/auth/login", {
-      email,
-      password,
-      role
-    });
-
-    setSuccess("Login successful!");
-
-    // ✅ Save user data (optional)
-    localStorage.setItem("user", JSON.stringify(res.data.user));
-
-    // ✅ Redirect based on role
-    if (res.data.user.role === "student") {
-      navigate("/collegecutoffsearch");
-    } else if (res.data.user.role === "admin") {
-      navigate("/addcollegecutoff");
+    if (!email || !role || !password) {
+      setError("Please fill in all fields.");
+      return;
     }
 
-  } catch (err) {
-    setError(err.response?.data?.message || "Login failed");
-  } finally {
-    setLoading(false);
-  }
-};
+    try {
+      setLoading(true);
+
+      const res = await axios.post(
+        "https://seat-allotment-production.up.railway.app/api/auth/login",
+        {
+          email,
+          password,
+          role,
+        }
+      );
+
+      setSuccess("Login successful!");
+
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      if (res.data.user.role === "student") {
+        navigate("/collegecutoffsearch");
+      } else if (res.data.user.role === "admin") {
+        navigate("/addcollegecutoff");
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <>
-      <div className="login-root">
-        {/* Background shapes */}
-        <div className="login-bg-shape login-bg-shape--1" />
-        <div className="login-bg-shape login-bg-shape--2" />
-        <div className="login-bg-shape login-bg-shape--3" />
+    <div className="login-root">
+      <div className="login-bg-shape login-bg-shape--1" />
+      <div className="login-bg-shape login-bg-shape--2" />
+      <div className="login-bg-shape login-bg-shape--3" />
 
-        <div className="login-card">
-          {/* Logo */}
-          <div className="login-logo-wrap">
-            <div className="login-logo-placeholder"><SeatLogo /></div>
+      <div className="login-card">
+        <div className="login-logo-wrap">
+          <div className="login-logo-placeholder">
+            <SeatLogo />
+          </div>
+        </div>
+
+        <div className="login-header">
+          <h1 className="login-title">Welcome back</h1>
+          <p className="login-subtitle">
+            Sign in to continue to your account
+          </p>
+        </div>
+
+        <form className="login-form" onSubmit={handleSubmit}>
+          
+          {/* Email */}
+          <div className="login-field-group">
+            <label className="login-label">Email Address</label>
+            <input
+              className="login-input"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
 
-          {/* Header */}
-          <div className="login-header">
-            <h1 className="login-title">Welcome back</h1>
-            <p className="login-subtitle">Sign in to continue to your account</p>
+          {/* Role */}
+          <div className="login-field-group">
+            <label className="login-label">Role</label>
+            <select
+              className="login-role-select"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+            >
+              {roles.map((r) => (
+                <option key={r.value} value={r.value} disabled={r.value === ""}>
+                  {r.label}
+                </option>
+              ))}
+            </select>
           </div>
 
-          {/* Form */}
-          <form className="login-form" onSubmit={handleSubmit}>
-            {/* Email */}
-            <div className="login-field-group">
-              <label className="login-label">Email Address</label>
+          {/* Password */}
+          <div className="login-field-group">
+            <label className="login-label">Password</label>
+            <div className="login-password-wrap">
               <input
                 className="login-input"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
-            </div>
-
-            {/* Role */}
-            <div className="login-field-group">
-              <label className="login-label">Role</label>
-              <select
-                className="login-role-select"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
+              <button
+                type="button"
+                className="login-pw-toggle"
+                onClick={() => setShowPassword((v) => !v)}
               >
-                {roles.map((r) => (
-                  <option key={r.value} value={r.value} disabled={r.value === ""}>
-                    {r.label}
-                  </option>
-                ))}
-              </select>
+                {showPassword ? "🙈" : "👁️"}
+              </button>
             </div>
+          </div>
 
-            {/* Password */}
-            <div className="login-field-group">
-              <label className="login-label">Password</label>
-              <div className="login-password-wrap">
-                <input
-                  className="login-input"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="login-pw-toggle"
-                  onClick={() => setShowPassword((v) => !v)}
-                  aria-label="Toggle password visibility"
-                >
-                  {showPassword ? "🙈" : "👁️"}
-                </button>
-              </div>
-            </div>
+          {/* ✅ FIXED Forgot Password */}
+          <div className="login-forgot">
+            <span
+              onClick={() => navigate("/forgotpassword")}
+              className="login-forgot-link"
+              style={{ cursor: "pointer" }}
+            >
+              Forgot password?
+            </span>
+          </div>
 
-            {/* Forgot password */}
-            <div className="login-forgot">
-              <a href="/forgotpassword" className="login-forgot-link">Forgot password?</a>
-            </div>
+          {/* Messages */}
+          {error && <p className="login-error-msg">⚠️ {error}</p>}
+          {success && <p className="login-success-msg">✅ {success}</p>}
 
-            {/* Error / Success */}
-            {error && <p className="login-error-msg">⚠️ {error}</p>}
-            {success && <p className="login-success-msg">✅ {success}</p>}
+          {/* Submit */}
+          <button className="login-submit-btn" type="submit" disabled={loading}>
+            {loading ? (
+              <span className="login-spinner" />
+            ) : (
+              <>
+                <span className="login-submit-btn__text">Sign In</span>
+                <span className="login-submit-btn__icon">→</span>
+              </>
+            )}
+          </button>
 
-            {/* Submit */}
-            <button className="login-submit-btn" type="submit" disabled={loading}>
-              {loading ? (
-                <span className="login-spinner" />
-              ) : (
-                <>
-                  <span className="login-submit-btn__text">Sign In</span>
-                  <span className="login-submit-btn__icon">→</span>
-                </>
-              )}
-            </button>
-
-            {/* loginister link */}
-            <p className="login-login-link">
-              Don't have an account?{" "}
-              <a href="/registration" className="login-login-anchor">Create one</a>
-            </p>
-          </form>
-        </div>
+          {/* ✅ FIXED Create Account */}
+          <p className="login-login-link">
+            Don't have an account?{" "}
+            <span
+              onClick={() => navigate("/register")}
+              className="login-login-anchor"
+              style={{ cursor: "pointer" }}
+            >
+              Create one
+            </span>
+          </p>
+        </form>
       </div>
-    </>
+    </div>
   );
-
 }
