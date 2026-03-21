@@ -5,27 +5,26 @@ require("dotenv").config();
 
 const app = express();
 
-// ✅ Middleware
 app.use(cors());
 app.use(express.json());
 
-// ✅ Routes
+// Routes
 const authRoutes = require("./routes/authRoutes");
 app.use("/api/auth", authRoutes);
 
-// ✅ Default route (important for Railway health check)
+// Test route
 app.get("/", (req, res) => {
-  res.send("Server is running ✅");
+  res.send("Server running");
 });
 
-// ✅ MongoDB Connection
+// MongoDB
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.log("❌ Mongo Error:", err));
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.log(err));
 
-// ✅ PORT (VERY IMPORTANT)
+// PORT
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
