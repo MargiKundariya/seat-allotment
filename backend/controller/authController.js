@@ -6,8 +6,8 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: "projecttiral7@gmail.com",
+    pass: "ycghwsvfffkrvsmp",
   },
 });
 
@@ -23,9 +23,7 @@ exports.sendOtp = async (req, res) => {
       return res.status(400).json({ message: "Email required" });
     }
 
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-      return res.status(500).json({ message: "Email config missing" });
-    }
+   
 
     const otp = generateOTP();
 
@@ -39,7 +37,7 @@ exports.sendOtp = async (req, res) => {
     await user.save();
 
     await transporter.sendMail({
-      from: `"Seat Allotment" <${process.env.EMAIL_USER}>`,
+      from: `"Seat Allotment" <${projecttiral7@gmail.com}>`,
       to: email,
       subject: "Seat Allotment OTP",
       text: `Your OTP is: ${otp}`,
